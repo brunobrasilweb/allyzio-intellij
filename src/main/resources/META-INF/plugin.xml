@@ -1,0 +1,33 @@
+<!-- Plugin Configuration File. Read more: https://plugins.jetbrains.com/docs/intellij/plugin-configuration-file.html -->
+<idea-plugin>
+    <id>br.com.inoovexa.allyzio</id>
+    <name>Allyzio Copilot</name>
+    <vendor email="brunobrasilweb@gmail.com" url="https://www.inoovexa.com.br">Bruno Brasil</vendor>
+
+    <description><![CDATA[
+    Enter short description for your plugin here.<br>
+    <em>most HTML tags may be used</em>
+  ]]></description>
+
+    <depends>com.intellij.modules.platform</depends>
+
+    <extensions defaultExtensionNs="com.intellij">
+        <applicationService serviceImplementation="br.com.inoovexa.allyzio.settings.AllyzioSettings"/>
+        <projectConfigurable parentId="tools" id="br.com.inoovexa.allyzio.settings.AllyzioConfigurable" instance="br.com.inoovexa.allyzio.settings.AllyzioConfigurable"
+                             displayName="Allyzio Copilot"/>
+    </extensions>
+
+    <actions>
+        <group id="AllyzioCopilotGroup" text="Allyzio Copilot" popup="true">
+            <add-to-group group-id="EditorPopupMenu" anchor="first"/>
+        </group>
+
+        <action
+                id="br.com.inoovexa.br.com.inoovexa.allyzio.action.RefactorCodeAction"
+                class="br.com.inoovexa.allyzio.action.RefactorCodeAction"
+                text="Refactor Code"
+                description="Improves the selected code using OpenAI API">
+            <add-to-group group-id="AllyzioCopilotGroup" anchor="first"/>
+        </action>
+    </actions>
+</idea-plugin>

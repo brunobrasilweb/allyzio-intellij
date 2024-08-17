@@ -1,0 +1,79 @@
+package br.com.inoovexa.allyzio.action;
+
+import br.com.inoovexa.allyzio.openai.ApiRequest;
+import br.com.inoovexa.allyzio.settings.AllyzioSettings;
+import com.intellij.diff.DiffContentFactory;
+import com.intellij.diff.DiffManager;
+import com.intellij.diff.requests.SimpleDiffRequest;
+import com.intellij.openapi.actionSystem.AnAction;
+import com.intellij.openapi.actionSystem.AnActionEvent;
+import com.intellij.openapi.editor.Editor;
+import com.intellij.openapi.editor.SelectionModel;
+import com.intellij.openapi.editor.impl.DocumentImpl;
+import com.intellij.openapi.project.Project;
+import com.intellij.openapi.ui.Messages;
+
+import java.io.IOException;
+
+import static java.util.Objects.isNull;
+
+public class RefactorCodeAction extends AnAction {
+
+    @Override
+    public void actionPerformed(AnActionEvent e) {
+        Project project = e.getProject();
+        Editor editor = e.getRequiredData(com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR);
+        SelectionModel selectionModel = editor.getSelectionModel();
+        String selectedText = selectionModel.getSelectedText();
+
+        if (isNull(selectedText)) {
+            Messages.showMessageDialog("No text selected", "Error", Messages.getErrorIcon());
+            return;
+        }
+
+        String refactorCode = null;
+        try {
+            refactorCode = requestImprovedCode(selectedText);
+        } catch (IOException ex) {
+            throw new RuntimeException(ex);
+        }
+
+        if (refactorCode != null) {
+            showDifferences(project, editor, selectedText, refactorCode);
+        } else {
+            Messages.showMessageDialog("Failed to improve code", "Error", Messages.getErrorIcon());
+        }
+    }
+
+    private String requestImprovedCode(String code) throws IOException {
+        AllyzioSettings settings = AllyzioSettings.getInstance();
+        ApiRequest request = new ApiRequest(settings.getOpenAiApiKey());
+
+        String systemPrompt = "You are a software engineering expert and will be making improvements by expanding the following rules of what to do and what not to do in these improvements:\n" +
+                "Rules:\n" +
+                "- Return only the refactored code.\n" +
+                "- Apply the best practices of the programming language.\n" +
+                "- Apply design patterns concepts if applicable.\n" +
+                "- Apply SOLID principles if applicable.\n" +
+                "- If using Java, utilize the new features and versions, e.g., streams, etc.\n" +
+                "- Do not suggest changes to variables, methods, or classes if they are correctly named.\n" +
+                "- Do not comment on the code.\n" +
+                "- Do not import libraries.\n" +
+                "- Do not return code in Markdown format.";
+
+        return request.chat(systemPrompt, code);
+    }
+
+    private void showDifferences(Project project, Editor editor, String originalCode, String improvedCode) {
+        var diffContentFactory = DiffContentFactory.getInstance();
+        String codeModified = editor.getDocument().getText().replace(originalCode, improvedCode);
+
+        SimpleDiffRequest diffRequest = new SimpleDiffRequest(
+                "Allyzio: Diff View",
+                diffContentFactory.create(project, new DocumentImpl(codeModified)),
+                diffContentFactory.create(project, editor.getDocument()), "Refactored", "Original");
+
+        DiffManager.getInstance().showDiff(project, diffRequest);
+    }
+
+}
