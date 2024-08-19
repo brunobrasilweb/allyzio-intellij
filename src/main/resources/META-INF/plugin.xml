@@ -5,11 +5,28 @@
     <vendor email="brunobrasilweb@gmail.com" url="https://www.inoovexa.com.br">Bruno Brasil</vendor>
 
     <description><![CDATA[
-    Enter short description for your plugin here.<br>
-    <em>most HTML tags may be used</em>
+    Allyzio is your best programming friend, it will help you write better code using best programming practices, design patterns, using SOLID. It helps you develop faster and with clean code.
+
+    <h3>Refactor Code</h3>
+    To use it, it's very simple, just select the part of the code you want to improve and click the right mouse button on the "Allyzio > Refactor Code" option and Allyzio will improve that part of your code.
+    <br><br>
+
+    <h3>Comment Code</h3>
+    You can add comments to your code smarter and faster. Click the right mouse button on "Allyzio > Comment Code" and the artificial intelligence will comment on your code.
+    <br><br>
+
+    <h3>Generate Test Unit</h3>
+    You can generate unit test code for various scenarios from the selected code. To generate the tests, simply select the code and right-click on 'Allyzio Copilot > Generate Unit Test'.
+    <br><br>
+
+    <h3>Explain Code</h3>
+    You can generate unit test code for various scenarios from the selected code. To generate the tests, simply select the code and right-click on 'Allyzio Copilot > Generate Unit Test'.
+    <br><br>
   ]]></description>
 
     <depends>com.intellij.modules.platform</depends>
+
+    <idea-version since-build="231" until-build="999.*" />
 
     <extensions defaultExtensionNs="com.intellij">
         <applicationService serviceImplementation="br.com.inoovexa.allyzio.settings.AllyzioSettings"/>
@@ -27,6 +44,27 @@
                 class="br.com.inoovexa.allyzio.action.RefactorCodeAction"
                 text="Refactor Code"
                 description="Improves the selected code using OpenAI API">
+            <add-to-group group-id="AllyzioCopilotGroup" anchor="first"/>
+        </action>
+        <action
+                id="br.com.inoovexa.br.com.inoovexa.allyzio.action.CommentCodeAction"
+                class="br.com.inoovexa.allyzio.action.CommentCodeAction"
+                text="Comment Code"
+                description="Comment code using OpenAI API">
+            <add-to-group group-id="AllyzioCopilotGroup" anchor="first"/>
+        </action>
+        <action
+                id="br.com.inoovexa.br.com.inoovexa.allyzio.action.TestUnitCodeAction"
+                class="br.com.inoovexa.allyzio.action.TestUnitCodeAction"
+                text="Test Unit Code"
+                description="Test Unit code using OpenAI API">
+            <add-to-group group-id="AllyzioCopilotGroup" anchor="first"/>
+        </action>
+        <action
+                id="br.com.inoovexa.br.com.inoovexa.allyzio.action.ExplainCodeAction"
+                class="br.com.inoovexa.allyzio.action.ExplainCodeAction"
+                text="Explain Code"
+                description="Explain code using OpenAI API">
             <add-to-group group-id="AllyzioCopilotGroup" anchor="first"/>
         </action>
     </actions>
