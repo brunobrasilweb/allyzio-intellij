@@ -42,7 +42,7 @@ public class ExplainCodeAction extends AnAction {
 
         String explainCode = null;
         try {
-            explainCode = request(selectedText);
+            explainCode = request(project, selectedText);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -50,12 +50,12 @@ public class ExplainCodeAction extends AnAction {
         if (explainCode != null) {
             generateView(explainCode);
         } else {
-            Messages.showMessageDialog("Failed to test unit code", "Error", Messages.getErrorIcon());
+            Messages.showMessageDialog("Failed to explain code", "Error", Messages.getErrorIcon());
         }
     }
 
-    private String request(String code) throws IOException {
-        AllyzioSettings settings = AllyzioSettings.getInstance();
+    private String request(Project project, String code) throws IOException {
+        AllyzioSettings settings = AllyzioSettings.getInstance(project);
         ApiRequest request = new ApiRequest(settings.getOpenAiApiKey());
         String lang = Locale.getDefault().getLanguage();
 

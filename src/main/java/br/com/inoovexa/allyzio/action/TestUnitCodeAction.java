@@ -35,7 +35,7 @@ public class TestUnitCodeAction extends AnAction {
 
         String testUnitCode = null;
         try {
-            testUnitCode = requestCode(selectedText);
+            testUnitCode = requestCode(project, selectedText);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -47,8 +47,8 @@ public class TestUnitCodeAction extends AnAction {
         }
     }
 
-    private String requestCode(String code) throws IOException {
-        AllyzioSettings settings = AllyzioSettings.getInstance();
+    private String requestCode(Project project, String code) throws IOException {
+        AllyzioSettings settings = AllyzioSettings.getInstance(project);
         ApiRequest request = new ApiRequest(settings.getOpenAiApiKey());
 
         String systemPrompt = "You are a software engineering expert. You will write unit tests for the code with the following rules:\n" +

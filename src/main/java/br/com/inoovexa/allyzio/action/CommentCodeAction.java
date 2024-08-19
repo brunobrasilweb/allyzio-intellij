@@ -34,7 +34,7 @@ public class CommentCodeAction extends AnAction {
 
         String commentCode = null;
         try {
-            commentCode = requestCommentCode(selectedText);
+            commentCode = requestCommentCode(project, selectedText);
         } catch (IOException ex) {
             throw new RuntimeException(ex);
         }
@@ -46,8 +46,8 @@ public class CommentCodeAction extends AnAction {
         }
     }
 
-    private String requestCommentCode(String code) throws IOException {
-        AllyzioSettings settings = AllyzioSettings.getInstance();
+    private String requestCommentCode(Project project, String code) throws IOException {
+        AllyzioSettings settings = AllyzioSettings.getInstance(project);
         ApiRequest request = new ApiRequest(settings.getOpenAiApiKey());
         String lang = Locale.getDefault().getLanguage();
 

@@ -2,6 +2,8 @@ package br.com.inoovexa.allyzio.settings;
 
 import com.intellij.openapi.options.Configurable;
 import javax.swing.*;
+
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.Nullable;
 
@@ -9,8 +11,8 @@ public class AllyzioConfigurable implements Configurable {
     private final AllyzioSettings settings;
     private JTextField apiKeyField;
 
-    public AllyzioConfigurable() {
-        this.settings = AllyzioSettings.getInstance();
+    public AllyzioConfigurable(Project project) {
+        this.settings = AllyzioSettings.getInstance(project);
     }
 
     @Nls
