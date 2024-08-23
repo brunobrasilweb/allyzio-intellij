@@ -9,7 +9,7 @@ import org.jetbrains.annotations.Nullable;
 
 public class AllyzioConfigurable implements Configurable {
     private final AllyzioSettings settings;
-    private JTextField apiKeyField;
+    private JTextField tokenField;
 
     public AllyzioConfigurable(Project project) {
         this.settings = AllyzioSettings.getInstance(project);
@@ -24,26 +24,26 @@ public class AllyzioConfigurable implements Configurable {
     @Nullable
     @Override
     public JComponent createComponent() {
-        apiKeyField = new JTextField(settings.getOpenAiApiKey(), 30);
+        tokenField = new JTextField(settings.getAllyzioToken(), 30);
         JPanel panel = new JPanel();
-        panel.add(new JLabel("OpenAI API Key:"));
-        panel.add(apiKeyField);
+        panel.add(new JLabel("Token:"));
+        panel.add(tokenField);
         return panel;
     }
 
     @Override
     public boolean isModified() {
-        return !apiKeyField.getText().equals(settings.getOpenAiApiKey());
+        return !tokenField.getText().equals(settings.getAllyzioToken());
     }
 
     @Override
     public void apply() {
-        settings.setOpenAiApiKey(apiKeyField.getText());
+        settings.setAllyzioToken(tokenField.getText());
     }
 
     @Override
     public void reset() {
-        apiKeyField.setText(settings.getOpenAiApiKey());
+        tokenField.setText(settings.getAllyzioToken());
     }
 
 }

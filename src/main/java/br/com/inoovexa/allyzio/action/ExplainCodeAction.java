@@ -4,23 +4,11 @@ import br.com.inoovexa.allyzio.openai.ApiRequest;
 import br.com.inoovexa.allyzio.settings.AllyzioSettings;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
-import com.intellij.openapi.command.WriteCommandAction;
-import com.intellij.openapi.editor.Document;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
-import com.intellij.openapi.fileEditor.FileDocumentManager;
-import com.intellij.openapi.fileEditor.FileEditorManager;
-import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
-import com.intellij.openapi.ui.SimpleToolWindowPanel;
-import com.intellij.openapi.wm.ToolWindow;
-import com.intellij.openapi.wm.ToolWindowManager;
-import com.intellij.testFramework.LightVirtualFile;
-import com.intellij.ui.content.Content;
-import com.intellij.ui.content.ContentFactory;
 
-import javax.swing.*;
 import java.io.IOException;
 import java.util.Locale;
 
@@ -56,7 +44,7 @@ public class ExplainCodeAction extends AnAction {
 
     private String request(Project project, String code) throws IOException {
         AllyzioSettings settings = AllyzioSettings.getInstance(project);
-        ApiRequest request = new ApiRequest(settings.getOpenAiApiKey());
+        ApiRequest request = new ApiRequest();
         String lang = Locale.getDefault().getLanguage();
 
         String systemPrompt = "You are a software engineering expert. You will briefly explain how the code works following these rules:\n" +

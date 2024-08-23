@@ -1,7 +1,7 @@
 package br.com.inoovexa.allyzio.action;
 
 import br.com.inoovexa.allyzio.openai.ApiRequest;
-import br.com.inoovexa.allyzio.settings.AllyzioSettings;
+import br.com.inoovexa.allyzio.state.AllyzioPersistentState;
 import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffManager;
 import com.intellij.diff.requests.SimpleDiffRequest;
@@ -16,6 +16,9 @@ import com.intellij.openapi.ui.Messages;
 import java.io.IOException;
 import java.util.Locale;
 
+import static br.com.inoovexa.allyzio.allyzio.AllyzioUtil.MAX_REQUEST;
+import static br.com.inoovexa.allyzio.allyzio.AllyzioUtil.countRequest;
+import static br.com.inoovexa.allyzio.allyzio.AllyzioUtil.isTokenValid;
 import static java.util.Objects.isNull;
 
 public class CommentCodeAction extends AnAction {
@@ -26,6 +29,16 @@ public class CommentCodeAction extends AnAction {
         Editor editor = e.getRequiredData(com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR);
         SelectionModel selectionModel = editor.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
+        AllyzioPersistentState state = AllyzioPersistentState.getInstance();
+
+        if (!isTokenValid(project)) {
+            countRequest();
+
+            if (state.getCounter() >= MAX_REQUEST) {
+                Messages.showMessageDialog("You've reached the limit of 5 requests per day. Upgrade here: https://allyzio.com", "Error", Messages.getErrorIcon());
+                return;
+            }
+        }
 
         if (isNull(selectedText)) {
             Messages.showMessageDialog("No text selected", "Error", Messages.getErrorIcon());
@@ -47,8 +60,7 @@ public class CommentCodeAction extends AnAction {
     }
 
     private String requestCommentCode(Project project, String code) throws IOException {
-        AllyzioSettings settings = AllyzioSettings.getInstance(project);
-        ApiRequest request = new ApiRequest(settings.getOpenAiApiKey());
+        ApiRequest request = new ApiRequest();
         String lang = Locale.getDefault().getLanguage();
 
         String systemPrompt = "You are a software engineering expert, provide comments explaining the code in a simple way in lang " + lang + ". Return only the code with the comments without using markdown.\n" +

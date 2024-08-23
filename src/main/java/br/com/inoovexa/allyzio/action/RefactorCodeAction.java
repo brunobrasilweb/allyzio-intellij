@@ -47,7 +47,7 @@ public class RefactorCodeAction extends AnAction {
 
     private String requestImprovedCode(Project project, String code) throws IOException {
         AllyzioSettings settings = AllyzioSettings.getInstance(project);
-        ApiRequest request = new ApiRequest(settings.getOpenAiApiKey());
+        ApiRequest request = new ApiRequest();
 
         String systemPrompt = "You are a software engineering expert and will be making improvements by expanding the following rules of what to do and what not to do in these improvements:\n" +
                 "Rules:\n" +

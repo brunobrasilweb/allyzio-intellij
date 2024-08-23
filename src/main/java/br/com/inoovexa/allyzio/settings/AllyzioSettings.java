@@ -11,7 +11,7 @@ import org.jetbrains.annotations.Nullable;
 @State(name = "AllyzioSettings", storages = @Storage("allyzio_settings.xml"))
 @Service(Service.Level.PROJECT)
 public final class AllyzioSettings implements PersistentStateComponent<AllyzioSettings> {
-    private String openAiApiKey;
+    private String allyzioToken;
 
     @Nullable
     @Override
@@ -21,15 +21,15 @@ public final class AllyzioSettings implements PersistentStateComponent<AllyzioSe
 
     @Override
     public void loadState(@NotNull AllyzioSettings state) {
-        this.openAiApiKey = state.openAiApiKey;
+        this.allyzioToken = state.allyzioToken;
     }
 
-    public String getOpenAiApiKey() {
-        return openAiApiKey;
+    public String getAllyzioToken() {
+        return allyzioToken;
     }
 
-    public void setOpenAiApiKey(String openAiApiKey) {
-        this.openAiApiKey = openAiApiKey;
+    public void setAllyzioToken(String allyzioToken) {
+        this.allyzioToken = allyzioToken;
     }
 
     // Método para obter a instância do serviço usando o Project

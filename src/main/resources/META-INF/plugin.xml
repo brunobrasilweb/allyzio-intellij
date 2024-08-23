@@ -32,6 +32,7 @@
         <applicationService serviceImplementation="br.com.inoovexa.allyzio.settings.AllyzioSettings"/>
         <projectConfigurable parentId="tools" id="br.com.inoovexa.allyzio.settings.AllyzioConfigurable" instance="br.com.inoovexa.allyzio.settings.AllyzioConfigurable"
                              displayName="Allyzio Copilot"/>
+        <applicationService serviceImplementation="br.com.inoovexa.allyzio.state.AllyzioPersistentState" />
     </extensions>
 
     <actions>
