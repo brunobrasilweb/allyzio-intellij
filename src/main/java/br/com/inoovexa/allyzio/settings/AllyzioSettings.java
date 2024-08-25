@@ -32,7 +32,6 @@ public final class AllyzioSettings implements PersistentStateComponent<AllyzioSe
         this.allyzioToken = allyzioToken;
     }
 
-    // Método para obter a instância do serviço usando o Project
     public static AllyzioSettings getInstance(@NotNull Project project) {
         return project.getService(AllyzioSettings.class);
     }

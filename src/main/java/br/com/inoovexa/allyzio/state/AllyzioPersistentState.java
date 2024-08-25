@@ -1,9 +1,10 @@
 package br.com.inoovexa.allyzio.state;
 
 import com.intellij.openapi.components.PersistentStateComponent;
-import com.intellij.openapi.components.ServiceManager;
+import com.intellij.openapi.components.Service;
 import com.intellij.openapi.components.State;
 import com.intellij.openapi.components.Storage;
+import com.intellij.openapi.project.Project;
 import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
@@ -11,7 +12,8 @@ import org.jetbrains.annotations.Nullable;
         name = "AllyzioState",
         storages = {@Storage("AllyzioState.xml")}
 )
-public class AllyzioPersistentState implements PersistentStateComponent<AllyzioPersistentState.State> {
+@Service(Service.Level.PROJECT)
+public final class AllyzioPersistentState implements PersistentStateComponent<AllyzioPersistentState.State> {
 
     public static class State {
         public int date;
@@ -32,8 +34,8 @@ public class AllyzioPersistentState implements PersistentStateComponent<AllyzioP
         this.myState = state;
     }
 
-    public static AllyzioPersistentState getInstance() {
-        return ServiceManager.getService(AllyzioPersistentState.class);
+    public static AllyzioPersistentState getInstance(@NotNull Project project) {
+        return project.getService(AllyzioPersistentState.class);
     }
 
     public int getDate() {

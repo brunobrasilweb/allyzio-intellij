@@ -2,6 +2,7 @@ package br.com.inoovexa.allyzio.action;
 
 import br.com.inoovexa.allyzio.openai.ApiRequest;
 import br.com.inoovexa.allyzio.settings.AllyzioSettings;
+import br.com.inoovexa.allyzio.state.AllyzioPersistentState;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.command.WriteCommandAction;
@@ -13,10 +14,15 @@ import com.intellij.openapi.fileEditor.FileEditorManager;
 import com.intellij.openapi.fileEditor.OpenFileDescriptor;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.psi.PsiDocumentManager;
+import com.intellij.psi.PsiFile;
 import com.intellij.testFramework.LightVirtualFile;
 
 import java.io.IOException;
 
+import static br.com.inoovexa.allyzio.allyzio.AllyzioUtil.MAX_REQUEST;
+import static br.com.inoovexa.allyzio.allyzio.AllyzioUtil.countRequest;
+import static br.com.inoovexa.allyzio.allyzio.AllyzioUtil.isTokenValid;
 import static java.util.Objects.isNull;
 
 public class TestUnitCodeAction extends AnAction {
@@ -27,6 +33,16 @@ public class TestUnitCodeAction extends AnAction {
         Editor editor = e.getRequiredData(com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR);
         SelectionModel selectionModel = editor.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
+        AllyzioPersistentState state = AllyzioPersistentState.getInstance(project);
+
+        if (!isTokenValid(project)) {
+            countRequest();
+
+            if (state.getCounter() >= MAX_REQUEST) {
+                Messages.showMessageDialog("You've reached the limit of 5 requests per day. Upgrade here: https://allyzio.com", "Error", Messages.getErrorIcon());
+                return;
+            }
+        }
 
         if (isNull(selectedText)) {
             Messages.showMessageDialog("No text selected", "Error", Messages.getErrorIcon());
@@ -64,7 +80,10 @@ public class TestUnitCodeAction extends AnAction {
     }
 
     private void generateTestUnit(Project project, Editor editor, String code) {
-        LightVirtualFile virtualFile = new LightVirtualFile("TemporaryFile." + editor.getVirtualFile().getExtension(), code);
+        PsiFile psiFile = PsiDocumentManager.getInstance(project).getPsiFile(editor.getDocument());
+        String fileExtension = (psiFile != null && psiFile.getVirtualFile() != null) ? psiFile.getVirtualFile().getExtension() : "txt";
+
+        LightVirtualFile virtualFile = new LightVirtualFile("TemporaryFile." + fileExtension, code);
 
         Document document = FileDocumentManager.getInstance().getDocument(virtualFile);
 

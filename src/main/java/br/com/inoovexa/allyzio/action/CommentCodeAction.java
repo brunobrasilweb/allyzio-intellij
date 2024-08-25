@@ -29,7 +29,7 @@ public class CommentCodeAction extends AnAction {
         Editor editor = e.getRequiredData(com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR);
         SelectionModel selectionModel = editor.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
-        AllyzioPersistentState state = AllyzioPersistentState.getInstance();
+        AllyzioPersistentState state = AllyzioPersistentState.getInstance(project);
 
         if (!isTokenValid(project)) {
             countRequest();

@@ -2,6 +2,7 @@ package br.com.inoovexa.allyzio.action;
 
 import br.com.inoovexa.allyzio.openai.ApiRequest;
 import br.com.inoovexa.allyzio.settings.AllyzioSettings;
+import br.com.inoovexa.allyzio.state.AllyzioPersistentState;
 import com.intellij.diff.DiffContentFactory;
 import com.intellij.diff.DiffManager;
 import com.intellij.diff.requests.SimpleDiffRequest;
@@ -15,6 +16,9 @@ import com.intellij.openapi.ui.Messages;
 
 import java.io.IOException;
 
+import static br.com.inoovexa.allyzio.allyzio.AllyzioUtil.MAX_REQUEST;
+import static br.com.inoovexa.allyzio.allyzio.AllyzioUtil.countRequest;
+import static br.com.inoovexa.allyzio.allyzio.AllyzioUtil.isTokenValid;
 import static java.util.Objects.isNull;
 
 public class RefactorCodeAction extends AnAction {
@@ -25,6 +29,16 @@ public class RefactorCodeAction extends AnAction {
         Editor editor = e.getRequiredData(com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR);
         SelectionModel selectionModel = editor.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
+        AllyzioPersistentState state = AllyzioPersistentState.getInstance(project);
+
+        if (!isTokenValid(project)) {
+            countRequest();
+
+            if (state.getCounter() >= MAX_REQUEST) {
+                Messages.showMessageDialog("You've reached the limit of 5 requests per day. Upgrade here: https://allyzio.com", "Error", Messages.getErrorIcon());
+                return;
+            }
+        }
 
         if (isNull(selectedText)) {
             Messages.showMessageDialog("No text selected", "Error", Messages.getErrorIcon());
