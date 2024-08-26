@@ -10,7 +10,7 @@ public class AllyzioUtil {
     public static int MAX_REQUEST = 5;
 
     public static boolean isTokenValid(Project project) {
-        AllyzioPersistentState state = AllyzioPersistentState.getInstance();
+        AllyzioPersistentState state = AllyzioPersistentState.getInstance(project);
 
         ApiClient apiClient = new ApiClient();
 
@@ -21,8 +21,8 @@ public class AllyzioUtil {
         return state.isTokenValid();
     }
 
-    public static void countRequest() {
-        AllyzioPersistentState state = AllyzioPersistentState.getInstance();
+    public static void countRequest(Project project) {
+        AllyzioPersistentState state = AllyzioPersistentState.getInstance(project);
 
         if (state.getDate() == LocalDate.now().getDayOfMonth()) {
             state.setCounter(state.getCounter() + 1);

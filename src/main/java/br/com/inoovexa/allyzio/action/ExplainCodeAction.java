@@ -29,7 +29,7 @@ public class ExplainCodeAction extends AnAction {
         AllyzioPersistentState state = AllyzioPersistentState.getInstance(project);
 
         if (!isTokenValid(project)) {
-            countRequest();
+            countRequest(project);
 
             if (state.getCounter() >= MAX_REQUEST) {
                 Messages.showMessageDialog("You've reached the limit of 5 requests per day. Upgrade here: https://allyzio.com", "Error", Messages.getErrorIcon());
