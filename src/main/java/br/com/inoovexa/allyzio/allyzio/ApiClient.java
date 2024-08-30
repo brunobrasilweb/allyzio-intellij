@@ -8,6 +8,7 @@ import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
+import java.util.Objects;
 
 public class ApiClient {
 
@@ -19,6 +20,10 @@ public class ApiClient {
     public Boolean isTokenValid(Project project) {
         OkHttpClient client = new OkHttpClient();
         AllyzioSettings settings = AllyzioSettings.getInstance(project);
+
+        if (Objects.isNull(settings.getAllyzioToken()) || settings.getAllyzioToken().isEmpty()) {
+            return false;
+        }
 
         Request request = new Request.Builder()
                 .url(API_URL)
