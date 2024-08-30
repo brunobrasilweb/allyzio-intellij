@@ -9,9 +9,11 @@ import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
 import com.intellij.openapi.editor.SelectionModel;
-import com.intellij.openapi.editor.impl.DocumentImpl;
+import com.intellij.openapi.fileEditor.FileDocumentManager;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.ui.Messages;
+import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.testFramework.LightVirtualFile;
 
 import java.io.IOException;
 import java.util.Locale;
@@ -63,11 +65,15 @@ public class CommentCodeAction extends AnAction {
         ApiRequest request = new ApiRequest();
         String lang = Locale.getDefault().getLanguage();
 
-        String systemPrompt = "You are a software engineering expert, provide comments explaining the code in a simple way in lang " + lang + ". Return only the code with the comments without using markdown.\n" +
+        String systemPrompt = "You are a software engineering expert, provide comments explaining the code in a simple way in lang " + lang + ".\n" +
                 "\n" +
                 "What you should not do in the code:\n" +
+                "- dont return markdownalter the code structure\n" +
                 "- alter the code structure\n" +
-                "- remove any code";
+                "- Do not remove original code\n" +
+                "- Do not return code in Markdown format.\n" +
+                "- do not response only comment\n" +
+                "- add comment at code sended\n";
 
         return request.chat(systemPrompt, code);
     }
@@ -76,9 +82,16 @@ public class CommentCodeAction extends AnAction {
         var diffContentFactory = DiffContentFactory.getInstance();
         String codeModified = editor.getDocument().getText().replace(originalCode, improvedCode);
 
+        VirtualFile originalFile = FileDocumentManager.getInstance().getFile(editor.getDocument());
+        if (originalFile == null) {
+            return;
+        }
+
+        LightVirtualFile modifiedFile = new LightVirtualFile(originalFile.getName(), originalFile.getFileType(), codeModified);
+
         SimpleDiffRequest diffRequest = new SimpleDiffRequest(
                 "Allyzio: Diff View",
-                diffContentFactory.create(project, new DocumentImpl(codeModified)),
+                diffContentFactory.create(project, modifiedFile),
                 diffContentFactory.create(project, editor.getDocument()), "Updated", "Original");
 
         DiffManager.getInstance().showDiff(project, diffRequest);
