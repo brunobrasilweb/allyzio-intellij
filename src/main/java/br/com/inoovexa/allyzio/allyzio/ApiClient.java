@@ -1,14 +1,15 @@
 package br.com.inoovexa.allyzio.allyzio;
 
 import br.com.inoovexa.allyzio.settings.AllyzioSettings;
-import com.google.gson.Gson;
 import com.intellij.openapi.project.Project;
 import okhttp3.OkHttpClient;
 import okhttp3.Request;
 import okhttp3.Response;
 
 import java.io.IOException;
-import java.util.Objects;
+import java.io.UncheckedIOException;
+
+import static java.util.Objects.isNull;
 
 public class ApiClient {
 
@@ -21,7 +22,7 @@ public class ApiClient {
         OkHttpClient client = new OkHttpClient();
         AllyzioSettings settings = AllyzioSettings.getInstance(project);
 
-        if (Objects.isNull(settings.getAllyzioToken()) || settings.getAllyzioToken().isEmpty()) {
+        if (isNull(settings.getAllyzioToken()) || settings.getAllyzioToken().isEmpty()) {
             return false;
         }
 
@@ -31,15 +32,11 @@ public class ApiClient {
                 .addHeader("Token", settings.getAllyzioToken())
                 .build();
 
-        Response response = null;
-
-        try {
-            response = client.newCall(request).execute();
+        try (Response response = client.newCall(request).execute()) {
+            return response.isSuccessful();
         } catch (IOException e) {
-            throw new RuntimeException(e);
+            throw new UncheckedIOException(e);
         }
-
-        return response.isSuccessful();
     }
 
 }
