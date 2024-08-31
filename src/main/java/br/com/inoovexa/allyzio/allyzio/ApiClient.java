@@ -13,7 +13,7 @@ import static java.util.Objects.isNull;
 
 public class ApiClient {
 
-    private static final String API_URL = "https://allyzio.com/api/token-access";
+    private static final String API_URL = "https://www.allyzio.com/api/token-access";
 
     public ApiClient() {
     }
