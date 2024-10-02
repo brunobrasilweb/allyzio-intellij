@@ -2,7 +2,9 @@ package br.com.inoovexa.allyzio.openai;
 
 import br.com.inoovexa.allyzio.model.openai.ChatPayload;
 import br.com.inoovexa.allyzio.model.openai.Message;
+import br.com.inoovexa.allyzio.settings.AllyzioSettings;
 import com.google.gson.Gson;
+import com.intellij.openapi.project.Project;
 import com.theokanning.openai.completion.chat.ChatCompletionResult;
 import okhttp3.*;
 
@@ -13,12 +15,12 @@ import java.util.List;
 public class ApiRequest {
 
     private static final String OPENAI_API_URL = "https://api.openai.com/v1/chat/completions";
-    private static final String OPENAI_API_KEY = "sk-rtcqbJmL4SNbjqsChLR2Q8jxOdkrzRH58RunqmcczAT3BlbkFJsCBtdUTMuVIITwB62TgtDrZHJ4AfrNQh1exkOR6Q4A";
 
     public ApiRequest() {
     }
 
-    public String chat(String systemPrompt, String userPrompt) throws IOException {
+    public String chat(String systemPrompt, String userPrompt, Project project) throws IOException {
+        AllyzioSettings settings = AllyzioSettings.getInstance(project);
         OkHttpClient client = new OkHttpClient();
         Gson gson = new Gson();
 
@@ -34,7 +36,7 @@ public class ApiRequest {
         Request request = new Request.Builder()
                 .url(OPENAI_API_URL)
                 .post(body)
-                .addHeader("Authorization", "Bearer " + OPENAI_API_KEY)
+                .addHeader("Authorization", "Bearer " + settings.getOpenaiToken())
                 .build();
 
         Response response = client.newCall(request).execute();

@@ -26,15 +26,10 @@ public class ExplainCodeAction extends AnAction {
         Editor editor = e.getRequiredData(com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR);
         SelectionModel selectionModel = editor.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
-        AllyzioPersistentState state = AllyzioPersistentState.getInstance(project);
 
         if (!isTokenValid(project)) {
-            countRequest(project);
-
-            if (state.getCounter() >= MAX_REQUEST) {
-                Messages.showMessageDialog("You've reached the limit of 5 requests per day. Upgrade here: https://allyzio.com", "Error", Messages.getErrorIcon());
-                return;
-            }
+            Messages.showMessageDialog("You've get token authorization Allyzio Colipot here: https://allyzio.com", "Error", Messages.getErrorIcon());
+            return;
         }
 
         if (isNull(selectedText)) {
@@ -69,7 +64,7 @@ public class ExplainCodeAction extends AnAction {
                 "- Talk only about the code\n" +
                 "- You can add comments to the code to make it easier to understand";
 
-        return request.chat(systemPrompt, code);
+        return request.chat(systemPrompt, code, project);
     }
 
     private void generateView(String code) {

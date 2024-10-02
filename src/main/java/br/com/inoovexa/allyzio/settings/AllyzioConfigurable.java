@@ -9,7 +9,8 @@ import org.jetbrains.annotations.Nullable;
 
 public class AllyzioConfigurable implements Configurable {
     private final AllyzioSettings settings;
-    private JTextField tokenField;
+    private JTextField allyzioTokenField;
+    private JTextField openaiTokenField;
 
     public AllyzioConfigurable(Project project) {
         this.settings = AllyzioSettings.getInstance(project);
@@ -24,26 +25,41 @@ public class AllyzioConfigurable implements Configurable {
     @Nullable
     @Override
     public JComponent createComponent() {
-        tokenField = new JTextField(settings.getAllyzioToken(), 30);
+        allyzioTokenField = new JTextField(settings.getAllyzioToken(), 30);
+        openaiTokenField = new JTextField(settings.getOpenaiToken(), 30);
+
         JPanel panel = new JPanel();
-        panel.add(new JLabel("Token:"));
-        panel.add(tokenField);
+        panel.setLayout(new BoxLayout(panel, BoxLayout.Y_AXIS));
+
+        JPanel allyzioPanel = new JPanel();
+        allyzioPanel.add(new JLabel("Allyzio Token:"));
+        allyzioPanel.add(allyzioTokenField);
+
+        JPanel openaiPanel = new JPanel();
+        openaiPanel.add(new JLabel("OpenAI Token:"));
+        openaiPanel.add(openaiTokenField);
+
+        panel.add(allyzioPanel);
+        panel.add(openaiPanel);
+
         return panel;
     }
 
     @Override
     public boolean isModified() {
-        return !tokenField.getText().equals(settings.getAllyzioToken());
+        return !allyzioTokenField.getText().equals(settings.getAllyzioToken()) ||
+                !openaiTokenField.getText().equals(settings.getOpenaiToken());
     }
 
     @Override
     public void apply() {
-        settings.setAllyzioToken(tokenField.getText());
+        settings.setAllyzioToken(allyzioTokenField.getText());
+        settings.setOpenaiToken(openaiTokenField.getText());
     }
 
     @Override
     public void reset() {
-        tokenField.setText(settings.getAllyzioToken());
+        allyzioTokenField.setText(settings.getAllyzioToken());
+        openaiTokenField.setText(settings.getOpenaiToken());
     }
-
 }
