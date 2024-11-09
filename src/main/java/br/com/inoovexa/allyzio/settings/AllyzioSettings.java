@@ -12,6 +12,8 @@ import org.jetbrains.annotations.Nullable;
 @Service(Service.Level.PROJECT)
 public final class AllyzioSettings implements PersistentStateComponent<AllyzioSettings> {
     private String openaiToken;
+    private String geminiToken;
+    private String provider;
 
     @Nullable
     @Override
@@ -22,6 +24,8 @@ public final class AllyzioSettings implements PersistentStateComponent<AllyzioSe
     @Override
     public void loadState(@NotNull AllyzioSettings state) {
         this.openaiToken = state.openaiToken;
+        this.geminiToken = state.geminiToken;
+        this.provider = state.provider;
     }
 
     public String getOpenaiToken() {
@@ -30,6 +34,22 @@ public final class AllyzioSettings implements PersistentStateComponent<AllyzioSe
 
     public void setOpenaiToken(String openaiToken) {
         this.openaiToken = openaiToken;
+    }
+
+    public String getGeminiToken() {
+        return geminiToken;
+    }
+
+    public void setGeminiToken(String geminiToken) {
+        this.geminiToken = geminiToken;
+    }
+
+    public String getProvider() {
+        return provider;
+    }
+
+    public void setProvider(String provider) {
+        this.provider = provider;
     }
 
     public static AllyzioSettings getInstance(@NotNull Project project) {

@@ -1,7 +1,6 @@
 package br.com.inoovexa.allyzio.action;
 
 import br.com.inoovexa.allyzio.openai.ApiRequest;
-import br.com.inoovexa.allyzio.settings.AllyzioSettings;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
@@ -43,7 +42,6 @@ public class ExplainCodeAction extends AnAction {
     }
 
     private String request(Project project, String code) throws IOException {
-        AllyzioSettings settings = AllyzioSettings.getInstance(project);
         ApiRequest request = new ApiRequest();
         String lang = Locale.getDefault().getLanguage();
 
