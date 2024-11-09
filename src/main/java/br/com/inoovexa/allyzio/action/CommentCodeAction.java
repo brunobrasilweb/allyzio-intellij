@@ -17,7 +17,6 @@ import com.intellij.testFramework.LightVirtualFile;
 import java.io.IOException;
 import java.util.Locale;
 
-import static br.com.inoovexa.allyzio.allyzio.AllyzioUtil.isTokenValid;
 import static java.util.Objects.isNull;
 
 public class CommentCodeAction extends AnAction {
@@ -28,11 +27,6 @@ public class CommentCodeAction extends AnAction {
         Editor editor = e.getRequiredData(com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR);
         SelectionModel selectionModel = editor.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
-
-        if (!isTokenValid(project)) {
-            Messages.showMessageDialog("You've get token authorization Allyzio Colipot here: https://allyzio.com", "Error", Messages.getErrorIcon());
-            return;
-        }
 
         if (isNull(selectedText)) {
             Messages.showMessageDialog("No text selected", "Error", Messages.getErrorIcon());

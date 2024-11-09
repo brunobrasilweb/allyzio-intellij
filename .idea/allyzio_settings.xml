@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="AllyzioSettings">
-    <option name="allyzioToken" value="" />
+    <option name="allyzioToken" value="0a4fe9a7-e8fe-4338-b07a-eb256c9ae6d9.z+WSBRFTMxD5nOZIJartfhhaKtdQz9zH2bpW+fDeLiM=" />
+    <option name="openaiToken" value="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" />
   </component>
 </project>

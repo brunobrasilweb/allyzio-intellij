@@ -11,7 +11,6 @@ import org.jetbrains.annotations.Nullable;
 @State(name = "AllyzioSettings", storages = @Storage("allyzio_settings.xml"))
 @Service(Service.Level.PROJECT)
 public final class AllyzioSettings implements PersistentStateComponent<AllyzioSettings> {
-    private String allyzioToken;
     private String openaiToken;
 
     @Nullable
@@ -22,16 +21,7 @@ public final class AllyzioSettings implements PersistentStateComponent<AllyzioSe
 
     @Override
     public void loadState(@NotNull AllyzioSettings state) {
-        this.allyzioToken = state.allyzioToken;
         this.openaiToken = state.openaiToken;
-    }
-
-    public String getAllyzioToken() {
-        return allyzioToken;
-    }
-
-    public void setAllyzioToken(String allyzioToken) {
-        this.allyzioToken = allyzioToken;
     }
 
     public String getOpenaiToken() {

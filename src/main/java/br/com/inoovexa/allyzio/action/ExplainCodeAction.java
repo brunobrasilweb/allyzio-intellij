@@ -2,7 +2,6 @@ package br.com.inoovexa.allyzio.action;
 
 import br.com.inoovexa.allyzio.openai.ApiRequest;
 import br.com.inoovexa.allyzio.settings.AllyzioSettings;
-import br.com.inoovexa.allyzio.state.AllyzioPersistentState;
 import com.intellij.openapi.actionSystem.AnAction;
 import com.intellij.openapi.actionSystem.AnActionEvent;
 import com.intellij.openapi.editor.Editor;
@@ -13,9 +12,6 @@ import com.intellij.openapi.ui.Messages;
 import java.io.IOException;
 import java.util.Locale;
 
-import static br.com.inoovexa.allyzio.allyzio.AllyzioUtil.MAX_REQUEST;
-import static br.com.inoovexa.allyzio.allyzio.AllyzioUtil.countRequest;
-import static br.com.inoovexa.allyzio.allyzio.AllyzioUtil.isTokenValid;
 import static java.util.Objects.isNull;
 
 public class ExplainCodeAction extends AnAction {
@@ -26,11 +22,6 @@ public class ExplainCodeAction extends AnAction {
         Editor editor = e.getRequiredData(com.intellij.openapi.actionSystem.CommonDataKeys.EDITOR);
         SelectionModel selectionModel = editor.getSelectionModel();
         String selectedText = selectionModel.getSelectedText();
-
-        if (!isTokenValid(project)) {
-            Messages.showMessageDialog("You've get token authorization Allyzio Colipot here: https://allyzio.com", "Error", Messages.getErrorIcon());
-            return;
-        }
 
         if (isNull(selectedText)) {
             Messages.showMessageDialog("No text selected", "Error", Messages.getErrorIcon());
